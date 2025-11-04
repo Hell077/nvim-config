@@ -84,3 +84,8 @@ map("n", "<C-S-k>", "vk", { desc = "Select up line" })
 map("n", "<C-S-j>", "vj", { desc = "Select down line" })
 map("i", "<C-S-k>", "<Esc>vk", { desc = "Select up line" })
 map("i", "<C-S-j>", "<Esc>vj", { desc = "Select down line" })
+
+map("n", "<C-S-h>", "vh", { desc = "Select left char" })
+map("n", "<C-S-l>", "vl", { desc = "Select right char" })
+map("i", "<C-S-h>", "<Esc>vh", { desc = "Select left char" })
+map("i", "<C-S-l>", "<Esc>vl", { desc = "Select right char" })
