@@ -61,31 +61,37 @@ map({ "n", "v" }, "<C-Right>", "w", { desc = "Move right by word" })
 map({ "n", "v" }, "<C-Up>",    "{", { desc = "Move up by paragraph" })
 map({ "n", "v" }, "<C-Down>",  "}", { desc = "Move down by paragraph" })
 
+-- В режиме вставки — перемещение без выхода
 map("i", "<C-Left>",  "<C-o>b", { desc = "Move left by word" })
 map("i", "<C-Right>", "<C-o>w", { desc = "Move right by word" })
 map("i", "<C-Up>",    "<C-o>{", { desc = "Move up by paragraph" })
 map("i", "<C-Down>",  "<C-o>}", { desc = "Move down by paragraph" })
 
--- === Ctrl+Shift для выделения текста при движении ===
--- Реализуем через визуальный режим (v + движение)
+-- === Ctrl+Shift для выделения текста ===
 map("n", "<C-S-Left>",  "vb", { desc = "Select word left" })
 map("n", "<C-S-Right>", "vw", { desc = "Select word right" })
 map("n", "<C-S-Up>",    "v{", { desc = "Select paragraph up" })
 map("n", "<C-S-Down>",  "v}", { desc = "Select paragraph down" })
 
--- В режиме вставки — тоже через временный выход
+-- В режиме вставки — временно выходим и выделяем
 map("i", "<C-S-Left>",  "<Esc>vb", { desc = "Select word left" })
 map("i", "<C-S-Right>", "<Esc>vw", { desc = "Select word right" })
 map("i", "<C-S-Up>",    "<Esc>v{", { desc = "Select paragraph up" })
 map("i", "<C-S-Down>",  "<Esc>v}", { desc = "Select paragraph down" })
 
--- === Ctrl + Shift + k/j для вертикального выделения ===
-map("n", "<C-S-k>", "vk", { desc = "Select up line" })
-map("n", "<C-S-j>", "vj", { desc = "Select down line" })
-map("i", "<C-S-k>", "<Esc>vk", { desc = "Select up line" })
-map("i", "<C-S-j>", "<Esc>vj", { desc = "Select down line" })
-
+-- === Ctrl + Shift + h/l — посимвольное выделение ===
 map("n", "<C-S-h>", "vh", { desc = "Select left char" })
 map("n", "<C-S-l>", "vl", { desc = "Select right char" })
 map("i", "<C-S-h>", "<Esc>vh", { desc = "Select left char" })
 map("i", "<C-S-l>", "<Esc>vl", { desc = "Select right char" })
+
+map("n", "<A-Up>", ":m .-2<CR>==", { desc = "Move current line up", silent = true })
+map("n", "<A-Down>", ":m .+1<CR>==", { desc = "Move current line down", silent = true })
+
+-- Визуальный режим — двигаем выделенный блок
+map("v", "<A-Up>", ":m '<-2<CR>gv=gv", { desc = "Move selected block up", silent = true })
+map("v", "<A-Down>", ":m '>+1<CR>gv=gv", { desc = "Move selected block down", silent = true })
+
+-- Вставочный режим — временно выходим, двигаем, возвращаемся
+map("i", "<A-Up>", "<Esc>:m .-2<CR>==gi", { desc = "Move current line up (insert)", silent = true })
+map("i", "<A-Down>", "<Esc>:m .+1<CR>==gi", { desc = "Move current line down (insert)", silent = true })
