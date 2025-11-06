@@ -26,22 +26,23 @@ map("n", "<C-w>", "<cmd>Bdelete<cr>", { desc = "Delete buffer (Ctrl+W)" })
 map("n", "<C-l>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next buffer" })
 map("n", "<C-h>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev buffer" })
 -- Быстрое переключение между деревом и файлом
+-- === SPACE + e — Переключение между деревом и текущим файлом ===
 map("n", "<leader>e", function()
-  local neotree = require("neo-tree.sources.manager")
-  local state = neotree.get_state("filesystem")
-  if state and state.winid and vim.api.nvim_win_is_valid(state.winid) then
-    -- Если дерево открыто — фокусируем его
-    if vim.api.nvim_get_current_win() ~= state.winid then
-      vim.api.nvim_set_current_win(state.winid)
-    else
-      -- если уже в дереве — фокус обратно на окно с файлом
-      vim.cmd("wincmd p")
-    end
-  else
-    -- если дерево не открыто — просто открыть
-    vim.cmd("Neotree show filesystem left")
+  local neotree_state_ok, state = pcall(require, "neo-tree.sources.manager")
+  if not neotree_state_ok then
+    vim.cmd("Neotree toggle") -- fallback если neo-tree не инициализирован
+    return
   end
-end, { desc = "Focus toggle between Neo-tree and file" })
+
+  local current_source = state.get_state("filesystem")
+  if current_source and current_source.winid and vim.api.nvim_win_is_valid(current_source.winid) then
+    -- Если открыт — фокусируемся на буфер
+    vim.cmd("wincmd p")
+  else
+    -- Если не открыт — открываем дерево
+    vim.cmd("Neotree focus filesystem left")
+  end
+end, { desc = "Toggle focus between Neo-tree and file" })
 
 map("n", "<leader>ct", "<cmd>ThemePick<cr>", { desc = "Choose colorscheme" })
 -- Save on Ctrl+S (normal/insert/visual)
@@ -95,3 +96,12 @@ map("v", "<A-Down>", ":m '>+1<CR>gv=gv", { desc = "Move selected block down", si
 -- Вставочный режим — временно выходим, двигаем, возвращаемся
 map("i", "<A-Up>", "<Esc>:m .-2<CR>==gi", { desc = "Move current line up (insert)", silent = true })
 map("i", "<A-Down>", "<Esc>:m .+1<CR>==gi", { desc = "Move current line down (insert)", silent = true })
+local builtin = require("telescope.builtin")
+
+vim.keymap.set({ "n", "i", "v" }, "<C-f>", function()
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", true)
+  builtin.current_buffer_fuzzy_find({
+    previewer = false,
+    layout_config = { width = 0.9, height = 0.8 },
+  })
+end, { desc = "Find in current file" })

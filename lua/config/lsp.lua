@@ -71,6 +71,22 @@ lspconfig.tsserver.setup({
   capabilities = capabilities,
 })
 
+-- Python (Pyright)
+lspconfig.pyright.setup({
+  on_attach = on_attach,
+  capabilities = capabilities,
+  settings = {
+    python = {
+      analysis = {
+        typeCheckingMode = "basic",  -- можно "off", "basic", "strict"
+        autoSearchPaths = true,
+        useLibraryCodeForTypes = true,
+        diagnosticMode = "openFilesOnly", -- чтобы не грузил весь проект
+      },
+    },
+  },
+})
+
 -- Rust
 lspconfig.rust_analyzer.setup({
   on_attach = on_attach,
