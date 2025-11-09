@@ -12,13 +12,8 @@ project.setup({
   silent_chdir = true,
 })
 
--- Пикер "последние 3 директории"
+-- Красивый пикер недавних проектов
 local function pick_recent_dirs()
-  local telescope_ok, telescope = pcall(require, "telescope")
-  if telescope_ok and telescope.extensions and telescope.extensions.projects then
-    telescope.extensions.projects.projects({})
-    return
-  end
   local recent = project.get_recent_projects() or {}
   -- оставим только уникальные существующие пути
   local paths = {}
@@ -29,23 +24,55 @@ local function pick_recent_dirs()
       set[p] = true
     end
   end
-  -- возьмём первые три
-  local top = {}
-  for i = 1, math.min(3, #paths) do top[i] = paths[i] end
-  if #top == 0 then
+  if #paths == 0 then
     vim.notify("Нет недавних проектов", vim.log.levels.INFO)
     return
   end
-  vim.ui.select(top, { prompt = "Open recent project:" }, function(choice)
+  local telescope_ok, _ = pcall(require, "telescope")
+  if telescope_ok then
+    local pickers = require("telescope.pickers")
+    local finders = require("telescope.finders")
+    local conf = require("telescope.config").values
+    local actions = require("telescope.actions")
+    local action_state = require("telescope.actions.state")
+
+    pickers.new({}, {
+      prompt_title = "Recent Projects",
+      finder = finders.new_table({
+        results = paths,
+        entry_maker = function(path)
+          return {
+            value = path,
+            display = path,
+            ordinal = path,
+          }
+        end,
+      }),
+      sorter = conf.generic_sorter({}),
+      attach_mappings = function(prompt_bufnr, _)
+        local function open_project()
+          local selection = action_state.get_selected_entry()
+          if not selection then return end
+          actions.close(prompt_bufnr)
+          local choice = selection.value
+          vim.cmd("cd " .. vim.fn.fnameescape(choice))
+          vim.cmd("edit " .. vim.fn.fnameescape(choice))
+        end
+        actions.select_default:replace(open_project)
+        return true
+      end,
+    }):find()
+    return
+  end
+  vim.ui.select(paths, { prompt = "Open recent project:" }, function(choice)
     if not choice then return end
     vim.cmd("cd " .. vim.fn.fnameescape(choice))
-    -- откроем список файлов сразу (как IDE)
-    require("telescope.builtin").find_files({ cwd = choice, hidden = true })
+    vim.cmd("edit " .. vim.fn.fnameescape(choice))
   end)
 end
 
 -- Команда и хоткей
 vim.api.nvim_create_user_command("ProjectPick", pick_recent_dirs, {})
-vim.keymap.set("n", "<leader>pp", "<cmd>ProjectPick<cr>", { desc = "Pick recent project (top 3)" })
+vim.keymap.set("n", "<leader>pp", "<cmd>ProjectPick<cr>", { desc = "Pick recent project" })
 
 -- Открывать меню при старте, если nvim запущен без файлов

@@ -10,7 +10,7 @@ require("mason-lspconfig").setup({
     "lua_ls",
     "pyright",
     "clangd",
-    "tsserver",
+    "ts_ls",
     "jdtls",
     "kotlin_language_server",
     "intelephense",
@@ -86,7 +86,7 @@ lspconfig.gopls.setup({
 })
 
 -- TypeScript / JavaScript
-lspconfig.tsserver.setup({
+lspconfig.ts_ls.setup({
   on_attach = on_attach,
   capabilities = capabilities,
 })

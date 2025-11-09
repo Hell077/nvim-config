@@ -13,6 +13,7 @@ toggleterm.setup({
   direction = "horizontal",       -- открывается снизу
   close_on_exit = true,
   shell = vim.o.shell,
+  autochdir = true,                -- терминал следует за текущим project root
 })
 
 -- Горизонтальный терминал по Ctrl+`
@@ -60,5 +61,4 @@ for i = 1, 10 do
     end
   end, { desc = "Close terminal " .. key })
 end
-
 
