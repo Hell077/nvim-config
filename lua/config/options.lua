@@ -29,3 +29,4 @@ o.undofile = true
 o.undodir = vim.fn.stdpath("state") .. "/undo"
 o.swapfile = false
 o.backup = false
+o.completeopt = "menu,menuone,noinsert"

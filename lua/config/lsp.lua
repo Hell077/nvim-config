@@ -8,11 +8,30 @@ require("mason-lspconfig").setup({
     "gopls",
     "rust_analyzer",
     "lua_ls",
+    "pyright",
+    "clangd",
+    "tsserver",
+    "jdtls",
+    "kotlin_language_server",
+    "intelephense",
+    "omnisharp",
+    "clojure_lsp",
   },
 })
 require("mason-tool-installer").setup({
-  ensure_instualled = {
-    "gopls","typescript-language-server", "rust-analyzer", "lua-language-server",
+  ensure_installed = {
+    "gopls",
+    "typescript-language-server",
+    "rust-analyzer",
+    "lua-language-server",
+    "pyright",
+    "clangd",
+    "typescript-language-server",
+    "jdtls",
+    "kotlin-language-server",
+    "intelephense",
+    "omnisharp",
+    "clojure-lsp",
   },
   auto_update = false,
   run_on_start = true,
@@ -66,7 +85,25 @@ lspconfig.gopls.setup({
   },
 })
 
+-- TypeScript / JavaScript
 lspconfig.tsserver.setup({
+  on_attach = on_attach,
+  capabilities = capabilities,
+})
+
+-- Java
+lspconfig.jdtls.setup({
+  on_attach = on_attach,
+  capabilities = capabilities,
+})
+
+-- Kotlin
+lspconfig.kotlin_language_server.setup({
+  on_attach = on_attach,
+  capabilities = capabilities,
+})
+
+lspconfig.clangd.setup({
   on_attach = on_attach,
   capabilities = capabilities,
 })
@@ -110,6 +147,24 @@ lspconfig.lua_ls.setup({
       telemetry = { enable = false },
     },
   },
+})
+
+-- PHP
+lspconfig.intelephense.setup({
+  on_attach = on_attach,
+  capabilities = capabilities,
+})
+
+-- C#
+lspconfig.omnisharp.setup({
+  on_attach = on_attach,
+  capabilities = capabilities,
+})
+
+-- Lisp (Clojure)
+lspconfig.clojure_lsp.setup({
+  on_attach = on_attach,
+  capabilities = capabilities,
 })
 
 vim.diagnostic.config({

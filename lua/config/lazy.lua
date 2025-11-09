@@ -70,6 +70,7 @@ require("lazy").setup({
       ensure_installed = {
         -- базовое
         "lua", "vim", "vimdoc", "query", "bash", "regex",
+        "c", "cpp",
         -- web
         "javascript", "typescript", "tsx", "html", "css", "json", "jsonc", "yaml", "toml",
         -- backend
@@ -123,6 +124,7 @@ require("lazy").setup({
       "hrsh7th/cmp-path",
       "hrsh7th/cmp-buffer",
       "rafamadriz/friendly-snippets",
+      "onsails/lspkind.nvim",
     },
     config = function()
       require("config.cmp")
@@ -246,5 +248,3 @@ require("lazy").setup({
   ui = { border = "rounded" },
   change_detection = { notify = false },
 })
-
-
