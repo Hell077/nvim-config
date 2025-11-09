@@ -15,6 +15,7 @@ map("n", "<C-t>", "<cmd>Neotree toggle<cr>", { desc = "Toggle file tree" })
 -- Поиск
 map("n", "ff", "<cmd>Telescope find_files<cr>", { desc = "Find Files" })
 map("n", "fg", "<cmd>Telescope live_grep<cr>", { desc = "Live Grep" })
+map("n", "fr", "<cmd>Telescope oldfiles<cr>", { desc = "Recent Files" })
 
 -- Навигация по открытым файлам (буферам)
 map("n", "<C-Tab>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next buffer (Ctrl+Tab)" })

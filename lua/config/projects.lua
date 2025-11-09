@@ -14,6 +14,11 @@ project.setup({
 
 -- Пикер "последние 3 директории"
 local function pick_recent_dirs()
+  local telescope_ok, telescope = pcall(require, "telescope")
+  if telescope_ok and telescope.extensions and telescope.extensions.projects then
+    telescope.extensions.projects.projects({})
+    return
+  end
   local recent = project.get_recent_projects() or {}
   -- оставим только уникальные существующие пути
   local paths = {}
@@ -44,11 +49,3 @@ vim.api.nvim_create_user_command("ProjectPick", pick_recent_dirs, {})
 vim.keymap.set("n", "<leader>pp", "<cmd>ProjectPick<cr>", { desc = "Pick recent project (top 3)" })
 
 -- Открывать меню при старте, если nvim запущен без файлов
-vim.api.nvim_create_autocmd("VimEnter", {
-  callback = function()
-    if vim.fn.argc() == 0 then
-      vim.schedule(pick_recent_dirs)
-    end
-  end,
-})
-
